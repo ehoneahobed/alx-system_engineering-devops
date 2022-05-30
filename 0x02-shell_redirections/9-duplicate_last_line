@@ -1,0 +1,3 @@
+#!/bin/bash
+echo -en "" | tail --lines=1 iacta  >> iacta
+
