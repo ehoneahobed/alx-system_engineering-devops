@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # This script indefinitely writes "I am alive!"" to the file /tmp/my_process
 
-while true
-do
-    sudo bash -c 'echo "I am alive!" >> /tmp/my_process'
+MYFILE=/tmp/my_process
+sudo touch $MYFILE
+
+while true; do
+    sudo bash -c "echo \"I am alive!\" >> $MYFILE"
     sleep 2
 done
