@@ -1,33 +1,26 @@
 #!/usr/bin/env bash
 # This script manages 'manage_my_process'
 
-start_p() {
-    ./manage_my_process &
-    echo $$ > /var/run/my_process.pid
-}
+if [ "$1" == "start" ]
+then
+  ./manage_my_process &
+  echo $$ > /var/run/my_process.pid
+  echo "manage_my_process started"
 
-stop_p() {
-    rm /var/run/my_process.pid
-    pkill -of manage_my_process
-}
+elif [ "$1" == "stop" ]
+then
+  kill "$(pgrep -f /manage_my_process)" 
+  rm /var/run/my_process.pid
+  echo "manage_my_process stopped"
 
-has_arg_1() {
-    if [ "$CMD" == "start" ]; then
-	start_p
-	echo "manage_my_process started"
-    elif [ "$CMD" == "stop" ]; then
-	stop_p
-	echo "manage_my_process stopped"
-    elif [ "$CMD" == "restart" ]; then
-	stop_p
-	start_p
-	echo "manage_my_process restarted"
-    fi
-}
+elif [ "$1" == "restart" ]
+then
+  kill "$(pgrep -f /manage_my_process)"
+  rm /var/run/my_process.pid
+  ./manage_my_process &
+  echo $$ > /var/run/my_process.pid
+  echo "manage_my_process restarted"
 
-if [ $# -gt 0 ]; then
-    CMD="$1"
-    has_arg_1
 else
-    echo "Usage: manage_your_process {start|stop|restart}"
+  echo "Usage: manage_my_process {start|stop|restart}"
 fi
