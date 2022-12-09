@@ -1,8 +1,8 @@
-# This manifest creats a file in /tmp/
+# This manifest creates a file at /tmp
 file { '/tmp/school':
-  ensure  => file,
-  mode    => '0744',
-  owner   => 'www-data',
-  group   => 'www-data',
-  content => 'I love puppet',
+    ensure  => 'file',
+    owner   => 'www-data',
+    group   => 'www-data',
+    mode    => '0744',
+    content => 'I love Puppet',
 }
