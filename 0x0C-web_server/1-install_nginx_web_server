@@ -1,7 +1,27 @@
 #!/usr/bin/env bash
-# Installs nginx server
-apt-get update
-apt-get -y install nginx
+# Install nginx on my web server
+# Nginx shou3ld be listening on port 80
+# When sent a GET request at root, return a page that contains at least
+# one string "Hello World"
+
+
+# install nginx
+apt update
+apt -y install nginx
+# allow only http on port 80
 ufw allow 'Nginx HTTP'
-echo "Hello World!" > /var/www/html/index.html
-service nginx start
+# file config
+mkdir -p /var/www/html
+chmod -R 755 /var/www
+echo 'Hello World!' > /var/www/html/index.html
+
+# start or restart if running
+t=$(pgrep nginx | wc -l)
+if [[ $t -le 0 ]]
+then
+	echo 'starting'
+	service nginx start
+else
+	echo 'restarting'
+	service nginx restart
+fi
