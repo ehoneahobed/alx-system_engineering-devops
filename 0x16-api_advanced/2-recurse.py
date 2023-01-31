@@ -1,45 +1,28 @@
 #!/usr/bin/python3
-
 """
-a list containing the titles of all hot articles for a given subreddit
+Using reddit's API
 """
+import requests
+after = None
 
-from requests import get
 
+def recurse(subreddit, hot_list=[]):
+    """returning top ten post titles recursively"""
+    global after
+    user_agent = {'User-Agent': 'api_advanced-project'}
+    url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+    parameters = {'after': after}
+    results = requests.get(url, params=parameters, headers=user_agent,
+                           allow_redirects=False)
 
-def recurse(subreddit, hot_list=[], after=None):
-    """
-    function that queries the Reddit API and returns a list containing the
-    titles of all hot articles for a given subreddit.
-    """
-
-    params = {'show': 'all'}
-
-    if subreddit is None or not isinstance(subreddit, str):
-        return None
-
-    user_agent = {'User-agent': 'Google Chrome Version 81.0.4044.129'}
-
-    url = 'https://www.reddit.com/r/{}/hot/.json?after={}'.format(subreddit,
-                                                                  after)
-
-    response = get(url, headers=user_agent, params=params)
-
-    if (response.status_code != 200):
-        return None
-
-    results = response.json()
-
-    try:
-        c_data = results.get('data').get('children')
-        after = results.get('data').get('after')
-
-        if after is None:
-            return hot_list
-
-        for i in c_data:
-            hot_list.append(i.get('data').get('title'))
-
-        return recurse(subreddit, hot_list, after)
-    except Exception:
-        print("None")
+    if results.status_code == 200:
+        after_data = results.json().get("data").get("after")
+        if after_data is not None:
+            after = after_data
+            recurse(subreddit, hot_list)
+        all_titles = results.json().get("data").get("children")
+        for title_ in all_titles:
+            hot_list.append(title_.get("data").get("title"))
+        return hot_list
+    else:
+        return (None)
