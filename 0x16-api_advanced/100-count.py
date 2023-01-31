@@ -1,7 +1,5 @@
 #!/usr/bin/python3
-"""
-prints a sorted count of given keywords
-"""
+"""Contains the count_words function"""
 import requests
 
 
